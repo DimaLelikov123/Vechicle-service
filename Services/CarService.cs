@@ -1,52 +1,63 @@
-﻿using Vehicle_service.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Vehicle_service.Data;
+using Vehicle_service.Models;
 
 namespace Vehicle_service.Services
 {
     public class CarService
     {
-        private List<Car> _cars;
+        private readonly VehicleContext _context;
 
-        public CarService()
+        public CarService(VehicleContext context)
         {
-            _cars = new List<Car>();
+            _context = context;
         }
 
-        public List<Car> GetAll() 
+        public async Task<List<Car>> GetAllAsync()
         {
-            return _cars;
+            return await _context.Cars.ToListAsync();
         }
 
-        public void AddCar(Car car)
+        public async Task<Car?> GetCarAsync(int id)
         {
-            _cars.Add(car);
+            return await _context.Cars.FindAsync(id);
         }
 
-        public Car GetCar(int id)
+        public async Task AddCarAsync(Car car)
         {
-            return _cars.Find(p => p.Id == id);
+            _context.Cars.Add(car);
+            await _context.SaveChangesAsync();
         }
 
-        public bool UpdateCar(Car car)
+        public async Task<bool> UpdateCarAsync(Car car)
         {
-            var toUpdate = _cars.Find(p => p.Id == car.Id);
-            if (toUpdate != null)
+            var existingCar = await _context.Cars.FindAsync(car.Id);
+            if (existingCar == null)
             {
-                toUpdate.Name = car.Name;
-                toUpdate.Model = car.Model;
-                return true;
+                return false;
             }
-            return false;
+
+            existingCar.Name = car.Name;
+            existingCar.Model = car.Model;
+
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public bool DeleteCar(int id)
+        public async Task<bool> DeleteCarAsync(int id)
         {
-            var toDelete = _cars.Find(p => p.Id == id);
-            if (toDelete != null)
+            var car = await _context.Cars.FindAsync(id);
+            if (car == null)
             {
-                _cars.Remove(toDelete);
-                return true;
+                return false;
             }
-            return false;
+
+            _context.Cars.Remove(car);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

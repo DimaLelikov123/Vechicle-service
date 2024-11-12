@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Vehicle_service.Models;
 using Vehicle_service.Services;
 
@@ -7,26 +8,27 @@ namespace Vehicle_service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CarsController : Controller
+    public class CarsController : ControllerBase
     {
         private readonly CarService _carService;
 
         public CarsController(CarService carService)
         {
-           _carService = carService;
+            _carService = carService;
         }
 
         [HttpGet]
-        public ActionResult<List<Car>> GetAll()
+        public async Task<ActionResult<List<Car>>> GetAll()
         {
-            return Ok(_carService.GetAll());
+            var cars = await _carService.GetAllAsync();
+            return Ok(cars);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Car> GetById(int id)
+        public async Task<ActionResult<Car>> GetById(int id)
         {
-            var car = _carService.GetCar(id);
-            if (car != null) 
+            var car = await _carService.GetCarAsync(id);
+            if (car != null)
             {
                 return Ok(car);
             }
@@ -34,9 +36,9 @@ namespace Vehicle_service.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var isRemoved = _carService.DeleteCar(id);
+            var isRemoved = await _carService.DeleteCarAsync(id);
             if (!isRemoved)
             {
                 return NotFound();
@@ -45,9 +47,14 @@ namespace Vehicle_service.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update([FromBody] Car car)
+        public async Task<IActionResult> Update(int id, [FromBody] Car car)
         {
-            var isUpdated = _carService.UpdateCar(car);
+            if (id != car.Id)
+            {
+                return BadRequest();
+            }
+
+            var isUpdated = await _carService.UpdateCarAsync(car);
             if (!isUpdated)
             {
                 return NotFound();
@@ -57,11 +64,10 @@ namespace Vehicle_service.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Car car)
+        public async Task<IActionResult> Create([FromBody] Car car)
         {
-            Console.WriteLine(car.Id);
-            _carService.AddCar(car);
-            return Created();
+            await _carService.AddCarAsync(car);
+            return CreatedAtAction(nameof(GetById), new { id = car.Id }, car);
         }
     }
 }

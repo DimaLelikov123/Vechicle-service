@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Vehicle_service.Models;
 using Vehicle_service.Services;
 
@@ -7,7 +8,7 @@ namespace Vehicle_service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OrdersController : Controller
+    public class OrdersController : ControllerBase
     {
         private readonly OrderService _orderService;
 
@@ -17,15 +18,16 @@ namespace Vehicle_service.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Order>> GetAll()
+        public async Task<ActionResult<List<Order>>> GetAll()
         {
-            return Ok(_orderService.GetAll());
+            var orders = await _orderService.GetAllAsync();
+            return Ok(orders);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Order> GetById(int id)
+        public async Task<ActionResult<Order>> GetById(int id)
         {
-            var order = _orderService.GetOrder(id);
+            var order = await _orderService.GetOrderAsync(id);
             if (order != null)
             {
                 return Ok(order);
@@ -33,22 +35,23 @@ namespace Vehicle_service.Controllers
             return NotFound();
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] Order order)
         {
-            var isRemoved = _orderService.DeleteOrder(id);
-            if (!isRemoved)
-            {
-                return NotFound();
-            }
-            return NoContent();
+            await _orderService.AddOrderAsync(order);
+            return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update([FromBody] Order order)
+        public async Task<IActionResult> Update(int id, [FromBody] Order order)
         {
-            var isUpdated = _orderService.UpdateOrder(order);
-            if (!isUpdated)
+            if (id != order.Id)
+            {
+                return BadRequest();
+            }
+
+            var updated = await _orderService.UpdateOrderAsync(order);
+            if (!updated)
             {
                 return NotFound();
             }
@@ -56,12 +59,16 @@ namespace Vehicle_service.Controllers
             return NoContent();
         }
 
-        [HttpPost]
-        public IActionResult Create([FromBody] Order order)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            Console.WriteLine(order.Id);
-            _orderService.AddOrder(order);
-            return Created();
+            var deleted = await _orderService.DeleteOrderAsync(id);
+            if (!deleted)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }

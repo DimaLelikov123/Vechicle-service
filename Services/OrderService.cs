@@ -1,52 +1,63 @@
-﻿using Vehicle_service.Models;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Vehicle_service.Data;
+using Vehicle_service.Models;
 
 namespace Vehicle_service.Services
 {
     public class OrderService
     {
-        private readonly List<Order> _orders;
+        private readonly VehicleContext _context;
 
-        public OrderService()
+        public OrderService(VehicleContext context)
         {
-            _orders = new List<Order>();
+            _context = context;
         }
 
-        public List<Order> GetAll()
+        public async Task<List<Order>> GetAllAsync()
         {
-            return _orders;
+            return await _context.Orders.ToListAsync();
         }
 
-        public void AddOrder(Order order)
+        public async Task<Order?> GetOrderAsync(int id)
         {
-            _orders.Add(order);
+            return await _context.Orders.FindAsync(id);
         }
 
-        public Order GetOrder(int id)
+        public async Task AddOrderAsync(Order order)
         {
-            return _orders.Find(p => p.Id == id);
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
         }
 
-        public bool UpdateOrder(Order order)
+        public async Task<bool> UpdateOrderAsync(Order order)
         {
-            var toUpdate = _orders.Find(p => p.Id == order.Id);
-            if (toUpdate != null)
+            var existingOrder = await _context.Orders.FindAsync(order.Id);
+            if (existingOrder == null)
             {
-                toUpdate.Price = order.Price;
-                toUpdate.CarId = order.CarId;
-                return true;
+                return false;
             }
-            return false;
+
+            existingOrder.Price = order.Price;
+            existingOrder.CarId = order.CarId;
+            // Update other properties as needed
+
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public bool DeleteOrder(int id)
+        public async Task<bool> DeleteOrderAsync(int id)
         {
-            var toDelete = _orders.Find(p => p.Id == id);
-            if (toDelete != null)
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null)
             {
-                _orders.Remove(toDelete);
-                return true;
+                return false;
             }
-            return false;
+
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
