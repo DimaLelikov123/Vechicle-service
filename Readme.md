@@ -1,8 +1,8 @@
 ### TODO:
 - Make DTOs for Orders
 - Apply DTOs to Order controller
-- Make Profile for Orders
 - Test swagger for all /Orders endpoints
+- Replace MVC pattern with Repository pattern
 
 ## notes:
 - If you updated model make sure to make new migration and update database

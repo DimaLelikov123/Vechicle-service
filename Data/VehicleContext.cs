@@ -3,7 +3,7 @@ using Vehicle_service.Models;
 
 namespace Vehicle_service.Data
 {
-  public class VehicleContext : DbContext // DbContext це тип з самих шарпів
+  public class VehicleContext : DbContext
   {
     public VehicleContext(DbContextOptions<VehicleContext> options)
       : base(options)
