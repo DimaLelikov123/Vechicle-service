@@ -1,4 +1,4 @@
-﻿using AutoMapper; // маппер потрібен для DTO / Profiles ( profiles створенний для зручності, якщо хочеш можеш видалити )
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Vehicle_service.Dto.Cars;
 using Vehicle_service.Models;
@@ -67,13 +67,11 @@ namespace Vehicle_service.Controllers
     }
 
     [HttpPost]
-    public async Task<ActionResult<CarReadDto>> Create([FromBody] CarCreateDto carCreateDto)
+    public async Task<ActionResult<CarDto>> Create([FromBody] CarCreateDto carCreateDto)
     {
-      var car = mapper.Map<Car>(carCreateDto);
-      await carService.AddCarAsync(car);
-
-      var carReadDto = mapper.Map<CarReadDto>(car);
-      return CreatedAtAction(nameof(GetById), new { id = car.Id }, carReadDto);
+      var car = await carService.AddCarAsync(carCreateDto);
+      
+      return CreatedAtAction(nameof(GetById), new { id = car.Id }, car);
     }
   }
 }

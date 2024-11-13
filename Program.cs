@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 using Vehicle_service.Data;
+using Vehicle_service.Repositories;
+using Vehicle_service.Repositories.Impl;
 using Vehicle_service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,7 @@ builder.Services.AddDbContext<VehicleContext>(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<CarService>();
 builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<ICarRepository, CarRepositoryImpl>();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();

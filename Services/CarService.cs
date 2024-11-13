@@ -1,32 +1,44 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Vehicle_service.Data;
+using Vehicle_service.Dto.Cars;
 using Vehicle_service.Models;
+using Vehicle_service.Repositories;
+using Vehicle_service.Repositories.Impl;
 
 namespace Vehicle_service.Services
 {
   public class CarService
   {
-    private readonly VehicleContext _context; // 1. створюєш змінну для збереження контексту бази
+    private readonly VehicleContext _context;
+    
+    private readonly ICarRepository _repository;
+    
+    private readonly IMapper _mapper;
 
-    public CarService(VehicleContext context)
+    public CarService(VehicleContext context, ICarRepository carRepository, IMapper mapper)
     {
-      _context = context; // передаєш контекст бази в змінну
+      _mapper = mapper;
+      _repository = carRepository;
+      _context = context; 
     }
 
     public async Task<List<Car>> GetAllAsync()
     {
-      return await _context.Cars.ToListAsync(); // використовуєш контекст ( підключення до бд ) для CRUD методів
+      return await _context.Cars.ToListAsync();
     }
 
     public async Task<Car?> GetCarAsync(int id)
     {
       return await _context.Cars.FindAsync(id);
     }
+    
 
-    public async Task AddCarAsync(Car car)
+    public async Task<CarDto> AddCarAsync(CarCreateDto createDto)
     {
-      _context.Cars.Add(car);
-      await _context.SaveChangesAsync();
+      var car = _mapper.Map<Car>(createDto);
+      var createdCar = await _repository.createCar(car);
+      return _mapper.Map<CarDto>(createdCar);
     }
 
     public async Task<bool> UpdateCarAsync(Car car)
