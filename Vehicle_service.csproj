@@ -24,6 +24,7 @@
   
   <ItemGroup>
     <Compile Include="obj\Debug\net8.0\Vehicle_service.MvcApplicationPartsAssemblyInfo.cs" />
+    <Compile Remove="Dto\Cars\CarReadDto.cs" />
   </ItemGroup>
   
   <ItemGroup>
