@@ -1,52 +1,43 @@
-﻿using Vehicle_service.Models;
+﻿using AutoMapper;
+using Vehicle_service.Dto.Cars;
+using Vehicle_service.Models;
+using Vehicle_service.Repositories;
 
 namespace Vehicle_service.Services
 {
-    public class CarService
+    public class CarService(ICarRepository carRepository, IMapper mapper)
     {
-        private List<Car> _cars;
-
-        public CarService()
+        public async Task<CarDto> GetCarAsync(int id)
         {
-            _cars = new List<Car>();
+            var foundCar = await carRepository.GetCarById(id);
+            return mapper.Map<CarDto>(foundCar);
         }
 
-        public List<Car> GetAll() 
+        public async Task<List<CarDto>> GetAllAsync()
         {
-            return _cars;
+            var cars = await carRepository.GetAllCars();
+            return mapper.Map<List<CarDto>>(cars);
         }
 
-        public void AddCar(Car car)
+        public async Task DeleteCarAsync(int id)
         {
-            _cars.Add(car);
+            await carRepository.GetCarById(id);
+            await carRepository.DeleteCar(id);
         }
 
-        public Car GetCar(int id)
+        public async Task<CarUpdateDto> UpdateCarAsync(int carId, CarUpdateDto updateDto)
         {
-            return _cars.Find(p => p.Id == id);
+            var existingCar = await carRepository.GetCarById(carId);
+            mapper.Map(updateDto, existingCar);
+            var updatedCar = await carRepository.UpdateCar(existingCar);
+            return mapper.Map<CarUpdateDto>(updatedCar);
         }
 
-        public bool UpdateCar(Car car)
+        public async Task<CarDto> AddCarAsync(CarCreateDto createDto)
         {
-            var toUpdate = _cars.Find(p => p.Id == car.Id);
-            if (toUpdate != null)
-            {
-                toUpdate.Name = car.Name;
-                toUpdate.Model = car.Model;
-                return true;
-            }
-            return false;
-        }
-
-        public bool DeleteCar(int id)
-        {
-            var toDelete = _cars.Find(p => p.Id == id);
-            if (toDelete != null)
-            {
-                _cars.Remove(toDelete);
-                return true;
-            }
-            return false;
+            var car = mapper.Map<Car>(createDto);
+            var createdCar = await carRepository.CreateCar(car);
+            return mapper.Map<CarDto>(createdCar);
         }
     }
 }

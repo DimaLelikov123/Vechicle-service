@@ -1,9 +1,17 @@
-﻿namespace Vehicle_service.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Vehicle_service.Models
 {
-    public class Order
-    {
+  public class Order
+  {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public float Price { get; set; }
+
+        [Required] public float Price { get; set; }
+
+        [ForeignKey("Car")]
         public int CarId { get; set; }
     }
 }

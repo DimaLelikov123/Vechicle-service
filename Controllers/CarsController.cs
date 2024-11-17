@@ -1,67 +1,45 @@
-﻿using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
-using Vehicle_service.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Vehicle_service.Dto.Cars;
 using Vehicle_service.Services;
 
 namespace Vehicle_service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CarsController : Controller
+    public class CarsController(CarService carService) : ControllerBase
     {
-        private readonly CarService _carService;
-
-        public CarsController(CarService carService)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CarDto>> GetById(int id)
         {
-           _carService = carService;
+            var car = await carService.GetCarAsync(id);
+            return Ok(car);
         }
 
         [HttpGet]
-        public ActionResult<List<Car>> GetAll()
+        public async Task<ActionResult<CarDto>> GetAll()
         {
-            return Ok(_carService.GetAll());
-        }
-
-        [HttpGet("{id}")]
-        public ActionResult<Car> GetById(int id)
-        {
-            var car = _carService.GetCar(id);
-            if (car != null) 
-            {
-                return Ok(car);
-            }
-            return NotFound();
+            var cars = await carService.GetAllAsync();
+            return Ok(cars);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task Delete(int id)
         {
-            var isRemoved = _carService.DeleteCar(id);
-            if (!isRemoved)
-            {
-                return NotFound();
-            }
-            return NoContent();
+            await carService.DeleteCarAsync(id);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update([FromBody] Car car)
+        public async Task<IActionResult> Update(int id, [FromBody] CarUpdateDto carUpdateDto)
         {
-            var isUpdated = _carService.UpdateCar(car);
-            if (!isUpdated)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
+            var updatedCar = await carService.UpdateCarAsync(id, carUpdateDto);
+            return Ok(updatedCar);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Car car)
+        public async Task<ActionResult<CarDto>> Create([FromBody] CarCreateDto carCreateDto)
         {
-            Console.WriteLine(car.Id);
-            _carService.AddCar(car);
-            return Created();
+            var car = await carService.AddCarAsync(carCreateDto);
+            return CreatedAtAction(nameof(GetById), new { id = car.Id }, car);
         }
     }
 }

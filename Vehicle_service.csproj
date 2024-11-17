@@ -5,9 +5,31 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql" Version="8.0.5" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.0.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="obj\Debug\net8.0\Vehicle_service.MvcApplicationPartsAssemblyInfo.cs" />
+    <Compile Remove="Dto\Cars\CarReadDto.cs" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="obj\Debug\net8.0\Vehicle_.68FAD14F.Up2Date" />
+    <Content Include="obj\Debug\net8.0\Vehicle_service.MvcApplicationPartsAssemblyInfo.cache" />
   </ItemGroup>
 
 </Project>

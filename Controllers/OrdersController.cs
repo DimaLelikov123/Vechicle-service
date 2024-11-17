@@ -1,67 +1,45 @@
-﻿using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
-using Vehicle_service.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Vehicle_service.Dto.Orders;
 using Vehicle_service.Services;
 
 namespace Vehicle_service.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class OrdersController : Controller
+  [Route("api/[controller]")]
+  [ApiController]
+  public class OrdersController(OrderService orderService) : ControllerBase
+  {
+    [HttpGet("{id}")]
+    public async Task<ActionResult<OrderDto>> GetById(int id)
     {
-        private readonly OrderService _orderService;
-
-        public OrdersController(OrderService orderService)
-        {
-            _orderService = orderService;
-        }
-
-        [HttpGet]
-        public ActionResult<List<Order>> GetAll()
-        {
-            return Ok(_orderService.GetAll());
-        }
-
-        [HttpGet("{id}")]
-        public ActionResult<Order> GetById(int id)
-        {
-            var order = _orderService.GetOrder(id);
-            if (order != null)
-            {
-                return Ok(order);
-            }
-            return NotFound();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            var isRemoved = _orderService.DeleteOrder(id);
-            if (!isRemoved)
-            {
-                return NotFound();
-            }
-            return NoContent();
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult Update([FromBody] Order order)
-        {
-            var isUpdated = _orderService.UpdateOrder(order);
-            if (!isUpdated)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
-        }
-
-        [HttpPost]
-        public IActionResult Create([FromBody] Order order)
-        {
-            Console.WriteLine(order.Id);
-            _orderService.AddOrder(order);
-            return Created();
-        }
+      var order = await orderService.GetOrderAsync(id);
+      return Ok(order);
     }
+
+    [HttpGet]
+    public async Task<ActionResult<OrderDto>> GetAll()
+    {
+      var orders = await orderService.GetAllAsync();
+      return Ok(orders);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task Delete(int id)
+    {
+      await orderService.DeleteOrderAsync(id);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, [FromBody] OrderUpdateDto orderUpdateDto)
+    {
+      var updatedOrder = await orderService.UpdateOrderAsync(id, orderUpdateDto);
+      return Ok(updatedOrder);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<OrderDto>> Create([FromBody] OrderCreateDto orderCreateDto)
+    {
+      var order = await orderService.AddOrderAsync(orderCreateDto);
+      return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
+    }
+  }
 }
