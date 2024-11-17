@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Vehicle_service.Dto.Orders;
-using Vehicle_service.Models;
 using Vehicle_service.Services;
 
 namespace Vehicle_service.Controllers

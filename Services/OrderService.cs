@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using Vehicle_service.Data;
 using Vehicle_service.Dto.Orders;
 using Vehicle_service.Models;
 using Vehicle_service.Repositories.Impl;
