@@ -13,7 +13,5 @@ namespace Vehicle_service.Models
 
         [ForeignKey("Car")]
         public int CarId { get; set; }
-
-        //public Car Car { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Vehicle_service.Dto.Orders;
 using Vehicle_service.Models;
 using Vehicle_service.Services;
 
@@ -6,68 +7,40 @@ namespace Vehicle_service.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class OrdersController : ControllerBase
+  public class OrdersController(OrderService orderService) : ControllerBase
   {
-    private readonly OrderService _orderService;
-
-    public OrdersController(OrderService orderService)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<OrderDto>> GetById(int id)
     {
-      _orderService = orderService;
+      var order = await orderService.GetOrderAsync(id);
+      return Ok(order);
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Order>>> GetAll()
+    public async Task<ActionResult<OrderDto>> GetAll()
     {
-      var orders = await _orderService.GetAllAsync();
+      var orders = await orderService.GetAllAsync();
       return Ok(orders);
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Order>> GetById(int id)
+    [HttpDelete("{id}")]
+    public async Task Delete(int id)
     {
-      var order = await _orderService.GetOrderAsync(id);
-      if (order != null)
-      {
-        return Ok(order);
-      }
-
-      return NotFound();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Order order)
-    {
-      await _orderService.AddOrderAsync(order);
-      return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
+      await orderService.DeleteOrderAsync(id);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] Order order)
+    public async Task<IActionResult> Update(int id, [FromBody] OrderUpdateDto orderUpdateDto)
     {
-      if (id != order.Id)
-      {
-        return BadRequest();
-      }
-
-      var updated = await _orderService.UpdateOrderAsync(order);
-      if (!updated)
-      {
-        return NotFound();
-      }
-
-      return NoContent();
+      var updatedOrder = await orderService.UpdateOrderAsync(id, orderUpdateDto);
+      return Ok(updatedOrder);
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpPost]
+    public async Task<ActionResult<OrderDto>> Create([FromBody] OrderCreateDto orderCreateDto)
     {
-      var deleted = await _orderService.DeleteOrderAsync(id);
-      if (!deleted)
-      {
-        return NotFound();
-      }
-
-      return NoContent();
+      var order = await orderService.AddOrderAsync(orderCreateDto);
+      return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
     }
   }
 }

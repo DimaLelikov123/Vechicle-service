@@ -1,60 +1,45 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Vehicle_service.Data;
+using Vehicle_service.Dto.Orders;
 using Vehicle_service.Models;
+using Vehicle_service.Repositories.Impl;
 
 namespace Vehicle_service.Services
 {
-  public class OrderService
+  public class OrderService(IOrderRepository orderRepository, IMapper mapper)
   {
-    private readonly VehicleContext _context;
-
-    public OrderService(VehicleContext context)
+    public async Task<OrderDto> GetOrderAsync(int id)
     {
-      _context = context;
+      var foundOrder = await orderRepository.GetOrderById(id);
+      return mapper.Map<OrderDto>(foundOrder);
     }
 
-    public async Task<List<Order>> GetAllAsync()
+    public async Task<List<OrderDto>> GetAllAsync()
     {
-      return await _context.Orders.ToListAsync();
+      var orders = await orderRepository.GetAllOrders();
+      return mapper.Map<List<OrderDto>>(orders);
     }
 
-    public async Task<Order?> GetOrderAsync(int id)
+    public async Task DeleteOrderAsync(int id)
     {
-      return await _context.Orders.FindAsync(id);
+      await orderRepository.GetOrderById(id);
+      await orderRepository.DeleteOrder(id);
     }
 
-    public async Task AddOrderAsync(Order order)
+    public async Task<OrderUpdateDto> UpdateOrderAsync(int orderId, OrderUpdateDto updateDto)
     {
-      await _context.Orders.AddAsync(order);
-      await _context.SaveChangesAsync();
+      var existingOrder = await orderRepository.GetOrderById(orderId);
+      mapper.Map(updateDto, existingOrder);
+      var updatedOrder = await orderRepository.UpdateOrder(existingOrder);
+      return mapper.Map<OrderUpdateDto>(updatedOrder);
     }
 
-    public async Task<bool> UpdateOrderAsync(Order order)
+    public async Task<OrderDto> AddOrderAsync(OrderCreateDto createDto)
     {
-      var existingOrder = await _context.Orders.FindAsync(order.Id);
-      if (existingOrder == null)
-      {
-        return false;
-      }
-
-      existingOrder.Price = order.Price;
-      existingOrder.CarId = order.CarId;
-
-      await _context.SaveChangesAsync();
-      return true;
-    }
-
-    public async Task<bool> DeleteOrderAsync(int id)
-    {
-      var order = await _context.Orders.FindAsync(id);
-      if (order == null)
-      {
-        return false;
-      }
-
-      _context.Orders.Remove(order);
-      await _context.SaveChangesAsync();
-      return true;
+      var order = mapper.Map<Order>(createDto);
+      var createdOrder = await orderRepository.CreateOrder(order);
+      return mapper.Map<OrderDto>(createdOrder);
     }
   }
 }
