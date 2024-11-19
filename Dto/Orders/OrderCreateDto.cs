@@ -4,8 +4,8 @@ namespace Vehicle_service.Dto.Orders
 {
     public class OrderCreateDto
     {
-        [Required] public string Price { get; set; } = null!;
+        [Required] public float Price { get; set; }
 
-        [Required] public string CarId { get; set; }
+        [Required] public int CarId { get; set; }
     }
 }
