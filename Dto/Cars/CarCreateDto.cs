@@ -4,9 +4,8 @@ namespace Vehicle_service.Dto.Cars
 {
   public class CarCreateDto
   {
-    
-    [Required] public string Name { get; set; } = null!;
+     public string Name { get; set; }
 
-    [Required] public string Model { get; set; } = null!;
+     public string Model { get; set; }
   }
 }

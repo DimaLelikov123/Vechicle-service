@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Vehicle_service.Dto.Cars;
 using Vehicle_service.Services;
 
@@ -36,8 +37,14 @@ namespace Vehicle_service.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CarDto>> Create([FromBody] CarCreateDto carCreateDto)
+        public async Task<ActionResult<CarDto>> Create([FromBody] CarCreateDto carCreateDto, [FromServices] IValidator<CarCreateDto> validator)
         {
+            var validationResult = await validator.ValidateAsync(carCreateDto);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.ToDictionary());
+            }
+
             var car = await carService.AddCarAsync(carCreateDto);
             return CreatedAtAction(nameof(GetById), new { id = car.Id }, car);
         }

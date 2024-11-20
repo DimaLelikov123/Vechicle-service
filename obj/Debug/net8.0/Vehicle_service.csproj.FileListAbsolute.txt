@@ -147,3 +147,6 @@ C:\Users\Dmytro\source\repos\Vehicle_service\obj\Debug\net8.0\refint\Vehicle_ser
 C:\Users\Dmytro\source\repos\Vehicle_service\obj\Debug\net8.0\Vehicle_service.pdb
 C:\Users\Dmytro\source\repos\Vehicle_service\obj\Debug\net8.0\Vehicle_service.genruntimeconfig.cache
 C:\Users\Dmytro\source\repos\Vehicle_service\obj\Debug\net8.0\ref\Vehicle_service.dll
+C:\Users\Dmytro\source\repos\Vehicle_service\bin\Debug\net8.0\FluentValidation.dll
+C:\Users\Dmytro\source\repos\Vehicle_service\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
+C:\Users\Dmytro\source\repos\Vehicle_service\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll

@@ -1,6 +1,9 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Vehicle_service.Data;
+using Vehicle_service.FluentValidation.CarsFluentValidation;
 using Vehicle_service.Repositories;
 using Vehicle_service.Repositories.Impl;
 using Vehicle_service.Services;
@@ -9,6 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<VehicleContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddControllers()
+    .AddFluentValidation(config =>
+    {
+        config.RegisterValidatorsFromAssemblyContaining<CarCreateDtoValidator>();
+        config.DisableDataAnnotationsValidation = true;
+    });
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<CarService>();
 builder.Services.AddScoped<OrderService>();
