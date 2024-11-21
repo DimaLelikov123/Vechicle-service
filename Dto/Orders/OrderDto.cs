@@ -6,7 +6,7 @@ namespace Vehicle_service.Dto.Orders
     {
         [Required] public int Id { get; set; }
     
-        [Required] public string Price { get; set; } = null!;
+        public string Price { get; set; }
 
         [Required] public string CarId { get; set; }
     }

@@ -9,11 +9,11 @@ namespace Vehicle_service.FluentValidation.CarsFluentValidation
         {
             RuleFor(x => x.Name)
                 .NotNull().WithMessage("{PropertyName} cannot be null")
-                .NotEmpty().WithMessage("{PropertyName} Car must contain a name");
+                .NotEmpty().WithMessage("Car must contain a name");
 
             RuleFor(x => x.Model)
                 .NotNull().WithMessage("{PropertyName} cannot be null")
-                .NotEmpty().WithMessage("{PropertyName} Car must contain a model");
+                .NotEmpty().WithMessage("Car must contain a model");
         }
     }
 }

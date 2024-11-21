@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Vehicle_service.Dto.Orders;
 using Vehicle_service.Services;
 
@@ -29,8 +30,14 @@ namespace Vehicle_service.Controllers
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] OrderUpdateDto orderUpdateDto)
+    public async Task<IActionResult> Update(int id, [FromBody] OrderUpdateDto orderUpdateDto, IValidator<OrderUpdateDto> validator)
     {
+      var validationResult = await validator.ValidateAsync(orderUpdateDto);
+      if (!validationResult.IsValid)
+      {
+        return BadRequest(validationResult.ToDictionary());
+      }
+      
       var updatedOrder = await orderService.UpdateOrderAsync(id, orderUpdateDto);
       return Ok(updatedOrder);
     }
