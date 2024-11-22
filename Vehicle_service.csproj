@@ -33,9 +33,5 @@
     <Content Include="obj\Debug\net8.0\Vehicle_.68FAD14F.Up2Date" />
     <Content Include="obj\Debug\net8.0\Vehicle_service.MvcApplicationPartsAssemblyInfo.cache" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="FluentValidation\OrdersFluentValidation\" />
-  </ItemGroup>
 
 </Project>

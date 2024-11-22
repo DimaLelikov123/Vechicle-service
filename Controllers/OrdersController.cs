@@ -30,15 +30,27 @@ namespace Vehicle_service.Controllers
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] OrderUpdateDto orderUpdateDto)
+    public async Task<IActionResult> Update(int id, [FromBody] OrderUpdateDto orderUpdateDto, [FromServices] IValidator<OrderUpdateDto> validator)
     {
+      var validationResult = await validator.ValidateAsync(orderUpdateDto);
+      if (!validationResult.IsValid)
+      {
+        return BadRequest(validationResult.ToDictionary());
+      }
+      
       var updatedOrder = await orderService.UpdateOrderAsync(id, orderUpdateDto);
       return Ok(updatedOrder);
     }
 
     [HttpPost]
-    public async Task<ActionResult<OrderDto>> Create([FromBody] OrderCreateDto orderCreateDto)
+    public async Task<ActionResult<OrderDto>> Create([FromBody] OrderCreateDto orderCreateDto, [FromServices] IValidator<OrderCreateDto> validator)
     {
+      var validationResult = await validator.ValidateAsync(orderCreateDto);
+      if (!validationResult.IsValid)
+      {
+        return BadRequest(validationResult.ToDictionary());
+      }
+      
       var order = await orderService.AddOrderAsync(orderCreateDto);
       return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
     }
