@@ -6,8 +6,8 @@ namespace Vehicle_service.Dto.Cars
   {
     [Key] public int Id { get; set; }
     
-    [Required] public string Name { get; set; } = null!;
+    public string Name { get; set; }
 
-    [Required] public string Model { get; set; } = null!;
+    public string Model { get; set; }
   }
 }

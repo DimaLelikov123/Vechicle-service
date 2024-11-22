@@ -30,8 +30,14 @@ namespace Vehicle_service.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] CarUpdateDto carUpdateDto)
+        public async Task<IActionResult> Update(int id, [FromBody] CarUpdateDto carUpdateDto, [FromServices] IValidator<CarUpdateDto> validator)
         {
+            var validationResult = await validator.ValidateAsync(carUpdateDto);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.ToDictionary());
+            }
+            
             var updatedCar = await carService.UpdateCarAsync(id, carUpdateDto);
             return Ok(updatedCar);
         }

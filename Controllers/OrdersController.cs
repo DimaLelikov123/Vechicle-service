@@ -30,14 +30,8 @@ namespace Vehicle_service.Controllers
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] OrderUpdateDto orderUpdateDto, IValidator<OrderUpdateDto> validator)
+    public async Task<IActionResult> Update(int id, [FromBody] OrderUpdateDto orderUpdateDto)
     {
-      var validationResult = await validator.ValidateAsync(orderUpdateDto);
-      if (!validationResult.IsValid)
-      {
-        return BadRequest(validationResult.ToDictionary());
-      }
-      
       var updatedOrder = await orderService.UpdateOrderAsync(id, orderUpdateDto);
       return Ok(updatedOrder);
     }

@@ -6,8 +6,8 @@ namespace Vehicle_service.Dto.Orders
     {
         [Key] public int Id { get; set; }
     
-        [Required] public string Price { get; set; } = null!;
+        [Required] public float Price { get; set; }
 
-        [Required] public string CarId { get; set; }
+        [Required] public int CarId { get; set; }
     }
 }

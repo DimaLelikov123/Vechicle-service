@@ -9,7 +9,7 @@ namespace Vehicle_service.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required] public float Price { get; set; }
+        public float Price { get; set; }
 
         [ForeignKey("Car")]
         public int CarId { get; set; }
