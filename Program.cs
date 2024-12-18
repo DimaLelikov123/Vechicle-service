@@ -7,6 +7,8 @@ using Vehicle_service.FluentValidation.CarsFluentValidation;
 using Vehicle_service.Repositories;
 using Vehicle_service.Repositories.Impl;
 using Vehicle_service.Services;
+using Microsoft.Extensions.Caching.Memory;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,11 @@ builder.Services.AddControllers()
         config.RegisterValidatorsFromAssemblyContaining<CarCreateDtoValidator>();
         config.DisableDataAnnotationsValidation = true;
     });
+
+using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton(factory);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<CarService>();
 builder.Services.AddScoped<OrderService>();
