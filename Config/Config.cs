@@ -37,7 +37,10 @@ namespace Vehicle_service.Config
       // Services
       services.AddScoped<CarService>();
       services.AddScoped<OrderService>();
-
+      
+      // Api config
+      services.Configure<CarsConfig>(configuration.GetSection("CarsConfig"));
+      
       // Swagger
       services.AddSwaggerConfiguration();
     }
