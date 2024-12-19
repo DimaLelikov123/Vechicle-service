@@ -2969,24 +2969,33 @@
     ]
   },
   "packageFolders": {
-    "/Users/ivanmironuk/.nuget/packages/": {}
+    "C:\\Users\\Dmytro\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/ivanmironuk/RiderProjects/Vechicle-service-new/Vehicle_service.csproj",
+      "projectUniqueName": "C:\\Users\\Dmytro\\source\\repos\\Vehicle_service\\Vehicle_service.csproj",
       "projectName": "Vehicle_service",
-      "projectPath": "/Users/ivanmironuk/RiderProjects/Vechicle-service-new/Vehicle_service.csproj",
-      "packagesPath": "/Users/ivanmironuk/.nuget/packages/",
-      "outputPath": "/Users/ivanmironuk/RiderProjects/Vechicle-service-new/obj/",
+      "projectPath": "C:\\Users\\Dmytro\\source\\repos\\Vehicle_service\\Vehicle_service.csproj",
+      "packagesPath": "C:\\Users\\Dmytro\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Dmytro\\source\\repos\\Vehicle_service\\obj\\",
       "projectStyle": "PackageReference",
+      "UsingMicrosoftNETSdk": false,
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/Users/ivanmironuk/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\Dmytro\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3070,7 +3079,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.404/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
